@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "CompositeKM.C": "cpp",
+        "Debug.C": "cpp",
+        "Timer.C": "cpp",
+        "lcd.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
