@@ -52,9 +52,9 @@ void main() {
                     lcdClear();
                     break;
                 case 0x01:
-                    memcpy(strBuf, ptr, 16);
+                    memcpy(strBuf, &ptr[1], 16);
                     lcdPrint(0, 0, strBuf);
-                    memcpy(strBuf, ptr + 16, 16);
+                    memcpy(strBuf, &ptr[1] + 16, 16);
                     lcdPrint(0, 1, strBuf);
                     break;
                 default:
