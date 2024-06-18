@@ -1,7 +1,7 @@
 ﻿
 namespace LogHost
 {
-    partial class MainForm
+    partial class LogForm
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -56,13 +56,14 @@ namespace LogHost
             // 
             // codeBox
             // 
-            this.codeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.codeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.codeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.codeBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.codeBox.Location = new System.Drawing.Point(12, 12);
             this.codeBox.Name = "codeBox";
+            this.codeBox.ReadOnly = true;
             this.codeBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.codeBox.Size = new System.Drawing.Size(280, 297);
             this.codeBox.TabIndex = 1;
@@ -76,13 +77,13 @@ namespace LogHost
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(64, 24);
             this.btnRun.TabIndex = 2;
-            this.btnRun.Text = "Execute";
+            this.btnRun.Text = "Clear";
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // outputBox
             // 
-            this.outputBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.outputBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.outputBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.outputBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -95,7 +96,7 @@ namespace LogHost
             // 
             // devList
             // 
-            this.devList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.devList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.devList.FormattingEnabled = true;

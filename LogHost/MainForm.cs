@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 using dotNSASM;
 using HID;
+using System.Text;
 
 namespace LogHost
 {
@@ -50,18 +51,29 @@ namespace LogHost
                     return Result.OK;
                 });
 
-                funcList.Add("prt", (dst, src, ext) =>
+                funcList.Add("clr", (dst, src, ext) =>
                 {
                     if (src != null) return Result.ERR;
                     if (dst == null) return Result.ERR;
-                    if (dst.type != RegType.CHAR && dst.type != RegType.INT && dst.type != RegType.STR)
+                    
+                    byteCode.Clear();
+                    byteCode.Add(new byte[] { 0xFE, 0x00 });
+                    return Result.OK;
+                });
+                funcList.Add("prt", (dst, src, ext) =>
+                {
+                    if (dst == null) return Result.ERR;
+                    if (src == null) return Result.ERR;
+                    if (dst.type != RegType.INT)
+                        return Result.ERR;
+                    if (src.type != RegType.CHAR && src.type != RegType.INT && src.type != RegType.STR)
                         return Result.ERR;
 
                     byteCode.Clear();
-                    byteCode.Add(new byte[] { 0x01 });
-                    if (dst.type == RegType.STR)
+                    byteCode.Add(new byte[] { (byte)((((int)dst.data) & 0x3) + 1) });
+                    if (src.type == RegType.STR)
                     {
-                        string str = (string)dst.data;
+                        string str = (string)src.data;
                         for (int i = 0; i < str.Length; i++)
                         {
                             if (i > 32) break;
@@ -71,10 +83,10 @@ namespace LogHost
                     else
                     {
                         byte i;
-                        if (dst.type == RegType.CHAR)
-                            i = (byte)(((char)dst.data) & 0xFF);
+                        if (src.type == RegType.CHAR)
+                            i = (byte)(((char)src.data) & 0xFF);
                         else
-                            i = (byte)(((int)dst.data) & 0xFF);
+                            i = (byte)(((int)src.data) & 0xFF);
                         byteCode.Add(new byte[] { i });
                     }
 
@@ -106,7 +118,6 @@ namespace LogHost
         }
 
         Hid hid;
-        IntPtr ptr;
 
         const int BUF_SIZE = 42;
 
@@ -118,8 +129,6 @@ namespace LogHost
             hid = new Hid();
             hid.DataReceived += Hid_DataReceived;
             hid.DeviceRemoved += Hid_DeviceRemoved;
-
-            ptr = new IntPtr(-1);
 
             Util.Output = (obj) => outputBox.Text += obj.ToString();
         }
@@ -138,7 +147,7 @@ namespace LogHost
                         outputBox.Text += (bytes[i][j].ToString("x2") + " ");
                 outputBox.Text += "\n";
 
-                if ((int)ptr != -1)
+                if (hid.IsOpen)
                 {
                     outputBox.Text += "Sending ...\n";
 
@@ -181,17 +190,39 @@ namespace LogHost
                 ushort pid = 0xFFFF;
                 switch (devList.SelectedIndex)
                 {
-                    case 0: // NSLOG
-                        pid = 46;
+                    case 0: // NSPAD
+                        pid = 52;
                         break;
-                    case 1: // CTMCU
+                    case 1: // NSLOG
+                        pid = 46;
+                        mid = 0x00;
+                        break;
+                    case 2: // CTMCU
                         pid = 558;
+                        break;
+                    case 3: // NTP PRO
+                        pid = 91;
+                        mid = 0x01;
+                        break;
+                    case 4: // NSDPC Keypad
+                        pid = 92;
+                        mid = 0x01;
+                        break;
+                    case 5: // NTP PRO II
+                        pid = 96;
+                        mid = 0x01;
+                        break;
+                    case 6: // PWM4Fan v3
+                        pid = 97;
+                        mid = 0x00;
                         break;
                     default:
                         break;
                 }
-                ptr = hid.OpenDevice(vid, pid, mid);
-                if ((int)ptr != -1)
+                int cnt = 0;
+                hid.ListHidDevice(ref cnt);
+                var ret = hid.OpenDevice(vid, pid, mid);
+                if (ret == Hid.HID_RETURN.SUCCESS)
                 {
                     outputBox.Clear();
                     outputBox.Text += ("Connected to: " + devList.SelectedItem + "\n");
@@ -201,9 +232,8 @@ namespace LogHost
             }
             else
             {
-                if ((int)ptr != -1)
-                    hid.CloseDevice(ptr);
-                ptr = new IntPtr(-1);
+                if (hid.IsOpen)
+                    hid.CloseDevice();
                 devList.Enabled = true;
                 btnConnect.Text = "Connect";
             }
@@ -212,7 +242,6 @@ namespace LogHost
         private void Hid_DeviceRemoved(object sender, EventArgs e)
         {
             Invoke(new ThreadStart(() => {
-                ptr = new IntPtr(-1);
                 devList.Enabled = true;
                 btnConnect.Text = "Connect";
             }));
@@ -221,8 +250,10 @@ namespace LogHost
         private void Hid_DataReceived(object sender, Report e)
         {
             byte[] bytes = e.reportBuff;
+            if (this.IsDisposed)
+                return;
             Invoke(new ThreadStart(() => {
-                outputBox.Text += "Data: ";
+                outputBox.Text = "Data: ";
                 for (int i = 0; i < bytes.Length; i++)
                     outputBox.Text += (bytes[i].ToString("x2") + " ");
                 outputBox.Text += "\n";

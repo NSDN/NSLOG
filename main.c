@@ -9,7 +9,7 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1);
 extern uint8_t FLAG;
 
 uint8_t* ptr;
-char strBuf[16]; uint8_t tmp;
+char strBuf[21]; uint8_t tmp;
 
 void main() {
     LEN = 0; LBK = 0; SDA = 0; SCL = 1;
@@ -21,48 +21,52 @@ void main() {
     EA = 1;
 
     delay(500);
-    usbReleaseAll();
-    usbPushKeydata();
     requestHIDData();
 
     lcdInit();
     lcdClear();
     LBK = 1;
 
-    lcdPrint(2, 0, "NSLOG Device");
+    lcdPrint(4, 1, "NSLOG Device");
     delay(400);
     memset(strBuf, '-', 8);
     strBuf[8] = '\0';
     for (uint8_t i = 0; i < 9; i++) {
-        lcdPrint(4, 1, strBuf);
+        lcdPrint(6, 2, strBuf);
         if (i < 8) {
             strBuf[i] = '=';
-            delay(200);
+            delay(100);
         }
     }
-    memset(strBuf, '\0', 16);
-    delay(1000);
+    memset(strBuf, '\0', 21);
+    delay(500);
     lcdClear();
 
     while (1) {
         if (hasHIDData()) {
             ptr = fetchHIDData();
             switch (ptr[0]) {
-                case 0x00:
-                    lcdClear();
-                    break;
                 case 0x01:
-                    memcpy(strBuf, &ptr[1], 16);
+                    memcpy(strBuf, &ptr[1], 20);
                     lcdPrint(0, 0, strBuf);
-                    memcpy(strBuf, &ptr[1] + 16, 16);
+                    break;
+                case 0x02:
+                    memcpy(strBuf, &ptr[1], 20);
                     lcdPrint(0, 1, strBuf);
                     break;
-                default:
-                    tmp = ptr[0];
-                    if (tmp & 0x20) {
-                        tmp &= 0x1F;
-                        lcdDraw(tmp % 16, tmp / 16, ptr[1]);
-                    }
+                case 0x03:
+                    memcpy(strBuf, &ptr[1], 20);
+                    lcdPrint(0, 2, strBuf);
+                    break;
+                case 0x04:
+                    memcpy(strBuf, &ptr[1], 20);
+                    lcdPrint(0, 3, strBuf);
+                    break;
+                case 0xFE:
+                    lcdClear();
+                    break;
+                case 0xFF:
+                    lcdDraw(ptr[1], ptr[2], ptr[3]);
                     break;
             }
 

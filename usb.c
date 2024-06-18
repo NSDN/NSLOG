@@ -9,7 +9,6 @@
 const uint8_c usbDevDesc[] = {
     0x12,               // 描述符长度(18字节)
     0x01,               // 描述符类型
-    //0x10, 0x01,         // 本设备所用USB版本(1.1)
     0x00, 0x02,         //本设备所用USB版本(2.0)
     0x00,               // 类代码
     0x00,               // 子类代码
@@ -27,78 +26,24 @@ const uint8_c usbDevDesc[] = {
 const uint8_c usbCfgDesc[] = {
     0x09,        //   bLength
     0x02,        //   bDescriptorType (Configuration)
-    0x5B, 0x00,  //   wTotalLength 91
-    0x03,        //   bNumInterfaces 3
+    0x29, 0x00,  //   wTotalLength 41
+    0x01,        //   bNumInterfaces 1
     0x01,        //   bConfigurationValue
     0x04,        //   iConfiguration (String Index)
     0xA0,        //   bmAttributes Remote Wakeup
-    0x32,        //   bMaxPower 100mA
-
-/* -------------------------------- */
-//  Keyboard
-    0x09,        //   bLength
-    0x04,        //   bDescriptorType (Interface)
-    0x00,        //   bInterfaceNumber 0
-    0x00,        //   bAlternateSetting
-    0x01,        //   bNumEndpoints 1
-    0x03,        //   bInterfaceClass
-    0x01,        //   bInterfaceSubClass
-    0x01,        //   bInterfaceProtocol
-    0x05,        //   iInterface (String Index)
-
-    0x09,        //   bLength
-    0x21,        //   bDescriptorType (HID)
-    0x11, 0x01,  //   bcdHID 1.11
-    0x00,        //   bCountryCode
-    0x01,        //   bNumDescriptors
-    0x22,        //   bDescriptorType[0] (HID)
-    0x45, 0x00,  //   wDescriptorLength[0] 69
-
-    0x07,        //   bLength
-    0x05,        //   bDescriptorType (Endpoint)
-    0x81,        //   bEndpointAddress (IN/D2H)
-    0x03,        //   bmAttributes (Interrupt)
-    0x0A, 0x00,  //   wMaxPacketSize 10
-    0x01,        //   bInterval 1 (unit depends on device speed)
-
-/* -------------------------------- */
-//  Mouse
-    0x09,        //   bLength
-    0x04,        //   bDescriptorType (Interface)
-    0x01,        //   bInterfaceNumber 1
-    0x00,        //   bAlternateSetting
-    0x01,        //   bNumEndpoints 1
-    0x03,        //   bInterfaceClass
-    0x01,        //   bInterfaceSubClass
-    0x02,        //   bInterfaceProtocol
-    0x06,        //   iInterface (String Index)
-
-    0x09,        //   bLength
-    0x21,        //   bDescriptorType (HID)
-    0x10, 0x01,  //   bcdHID 1.10
-    0x00,        //   bCountryCode
-    0x01,        //   bNumDescriptors
-    0x22,        //   bDescriptorType[0] (HID)
-    0x34, 0x00,  //   wDescriptorLength[0] 52
-
-    0x07,        //   bLength
-    0x05,        //   bDescriptorType (Endpoint)
-    0x82,        //   bEndpointAddress (IN/D2H)
-    0x03,        //   bmAttributes (Interrupt)
-    0x04, 0x00,  //   wMaxPacketSize 4
-    0x0A,        //   bInterval 10 (unit depends on device speed)
+    0x64,        //   bMaxPower 200mA
 
 /* -------------------------------- */
 //  Custom HID
     0x09,        //   bLength
     0x04,        //   bDescriptorType (Interface)
-    0x02,        //   bInterfaceNumber 2
+    0x00,        //   bInterfaceNumber 0
     0x00,        //   bAlternateSetting
     0x02,        //   bNumEndpoints 2
     0x03,        //   bInterfaceClass
     0x00,        //   bInterfaceSubClass
     0x00,        //   bInterfaceProtocol
-    0x07,        //   iInterface (String Index)
+    0x05,        //   iInterface (String Index)
 
     0x09,        //   bLength
     0x21,        //   bDescriptorType (HID)
@@ -124,84 +69,19 @@ const uint8_c usbCfgDesc[] = {
 };
 
 /*HID类报表描述符*/
-const uint8_c KeyRepDesc[] = {
-    0x05, 0x01,        // Usage Page (Generic Desktop Ctrls)
-    0x09, 0x06,        // Usage (Keyboard)
-    0xA1, 0x01,        // Collection (Application)
-    0x85, 0x01,        //   Report ID (1)
-    0x05, 0x07,        //   Usage Page (Kbrd/Keypad)
-    0x15, 0x00,        //   Logical Minimum (0)
-    0x25, 0x01,        //   Logical Maximum (1)
-    0x19, 0xE0,        //   Usage Minimum (0xE0)
-    0x29, 0xE7,        //   Usage Maximum (0xE7)
-    0x75, 0x01,        //   Report Size (1)
-    0x95, 0x08,        //   Report Count (8)
-    0x81, 0x02,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x05, 0x07,        //   Usage Page (Kbrd/Keypad)
-    0x15, 0x00,        //   Logical Minimum (0)
-    0x26, 0xFF, 0x00,  //   Logical Maximum (255)
-    0x19, 0x00,        //   Usage Minimum (0x00)
-    0x29, 0x91,        //   Usage Maximum (0x91)
-    0x75, 0x08,        //   Report Size (8)
-    0x95, 0x08,        //   Report Count (8)
-    0x81, 0x00,        //   Input (Data,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0xC0,              // End Collection
-    0x05, 0x0C,        // Usage Page (Consumer)
-    0x09, 0x01,        // Usage (Consumer Control)
-    0xA1, 0x01,        // Collection (Application)
-    0x85, 0x02,        //   Report ID (2)
-    0x05, 0x0C,        //   Usage Page (Consumer)
-    0x15, 0x00,        //   Logical Minimum (0)
-    0x26, 0xFF, 0x7F,  //   Logical Maximum (32767)
-    0x19, 0x00,        //   Usage Minimum (0x00)
-    0x2A, 0xFF, 0x02,  //   Usage Maximum (0x2FF)
-    0x75, 0x10,        //   Report Size (16)
-    0x95, 0x01,        //   Report Count (1)
-    0x81, 0x00,        //   Input (Data,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0xC0,              // End Collection
-};
-const uint8_c MouseRepDesc[] = {
-    0x05, 0x01,        // Usage Page (Generic Desktop Ctrls)
-    0x09, 0x02,        // Usage (Mouse)
-    0xA1, 0x01,        // Collection (Application)
-    0x09, 0x01,        //   Usage (Pointer)
-    0xA1, 0x00,        //   Collection (Physical)
-    0x05, 0x09,        //     Usage Page (Button)
-    0x19, 0x01,        //     Usage Minimum (0x01)
-    0x29, 0x03,        //     Usage Maximum (0x03)
-    0x15, 0x00,        //     Logical Minimum (0)
-    0x25, 0x01,        //     Logical Maximum (1)
-    0x75, 0x01,        //     Report Size (1)
-    0x95, 0x03,        //     Report Count (3)
-    0x81, 0x02,        //     Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x75, 0x05,        //     Report Size (5)
-    0x95, 0x01,        //     Report Count (1)
-    0x81, 0x01,        //     Input (Const,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x05, 0x01,        //     Usage Page (Generic Desktop Ctrls)
-    0x09, 0x30,        //     Usage (X)
-    0x09, 0x31,        //     Usage (Y)
-    0x09, 0x38,        //     Usage (Wheel)
-    0x15, 0x81,        //     Logical Minimum (-127)
-    0x25, 0x7F,        //     Logical Maximum (127)
-    0x75, 0x08,        //     Report Size (8)
-    0x95, 0x03,        //     Report Count (3)
-    0x81, 0x06,        //     Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
-    0xC0,              //   End Collection
-    0xC0,              // End Collection
-};
 const uint8_c CustomRepDesc[] = {
     0x06, 0x00, 0xFF,  // Usage Page (Vendor Defined 0xFF00)
     0x09, 0x01,        // Usage (0x01)
     0xA1, 0x01,        // Collection (Application)
     0x85, 0xAA,        //   Report ID (170)
-    0x95, 0x2A,        //   Report Count (42)
+    0x95, HID_BUF_SIZE,//   Report Count (XX)
     0x75, 0x08,        //   Report Size (8)
     0x25, 0x01,        //   Logical Maximum (1)
     0x15, 0x00,        //   Logical Minimum (0)
     0x09, 0x01,        //   Usage (0x01)
     0x81, 0x02,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
     0x85, 0x55,        //   Report ID (85)
-    0x95, 0x2A,        //   Report Count (42)
+    0x95, HID_BUF_SIZE,//   Report Count (XX)
     0x75, 0x08,        //   Report Size (8)
     0x25, 0x01,        //   Logical Maximum (1)
     0x15, 0x00,        //   Logical Minimum (0)
@@ -218,25 +98,14 @@ const uint8_c usbProdDesc[] = { 0x1A, 0x03,
 };
 const uint8_c usbSerialDesc[] = { 0x0A, 0x03, '0', 0, '0', 0, '0', 0, '0', 0 };
 const uint8_c usbCfgStrDesc[] = { 0x12, 0x03, 'N', 0, 'S', 0, 'D', 0, 'N', 0, ' ', 0, 'U', 0, 'S', 0, 'B', 0 };
-const uint8_c usbKeyStrDesc[] = { 0x18, 0x03, 'N', 0, 'S', 0, 'D', 0, 'N', 0, ' ', 0, 'K', 0, 'e', 0, 'y', 0, 'p', 0, 'a', 0, 'd', 0 };
-const uint8_c usbMseStrDesc[] = { 0x16, 0x03, 'N', 0, 'S', 0, 'D', 0, 'N', 0, ' ', 0, 'M', 0, 'o', 0, 'u', 0, 's', 0, 'e', 0 };
 const uint8_c usbCusStrDesc[] = { 0x18, 0x03, 'N', 0, 'S', 0, 'D', 0, 'N', 0, ' ', 0, 'C', 0, 'u', 0, 's', 0, 't', 0, 'o', 0, 'm', 0 };
 
+// START at 0x0000
 uint8_x __at (0x0000) Ep0Buffer[THIS_ENDP0_SIZE];                                           //端点0 OUT&IN缓冲区，必须是偶地址
-uint8_x __at (0x0008) Ep1Buffer[MAX_PACKET_SIZE];                                           //端点1 IN缓冲区,必须是偶地址
-uint8_x __at (0x0048) Ep2Buffer[MAX_PACKET_SIZE];                                           //端点2 IN缓冲区,必须是偶地址
-uint8_x __at (0x0088) Ep3Buffer[2 * MAX_PACKET_SIZE];                                       //端点3 OUT&IN缓冲区,必须是偶地址
-uint8_x __at (0x0108) HIDMouse[4] = { 0 };                                                  //鼠标数据
-/*
-    byte 0: control key
-        bit 0-7: lCtrl, lShift, lAlt, lGUI, rCtrl, rShift, rAlt, rGUI
-    byte 1: multimedia key / or reversed
-        bit 0-7: play, pause, next, prev, stop, mute, vol+, vol-
-    byte 2-9: standard key
-*/
-uint8_x __at (0x010C) HIDKey[10] = { 0 };                                                   //键盘数据
-uint8_x __at (0x0116) HIDInput[42] = { 0 };                                                 //自定义HID接收缓冲
-uint8_x __at (0x0140) HIDOutput[42] = { 0 };                                                //自定义HID发送缓冲
+uint8_x __at (0x0008) Ep3Buffer[2 * MAX_PACKET_SIZE];                                       //端点3 OUT&IN缓冲区,必须是偶地址'
+// END at 0x0088
+uint8_x HIDInput[HID_BUF_SIZE] = { 0 };                                                     //自定义HID接收缓冲
+uint8_x HIDOutput[HID_BUF_SIZE] = { 0 };                                                    //自定义HID发送缓冲
 uint8_t             SetupReqCode, SetupLen, Count, FLAG, UsbConfig;
 uint8_t*            pDescr;                                                                 //USB配置标志
 volatile __bit      HIDIN = 0;
@@ -249,26 +118,17 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1) {
 				case UIS_TOKEN_OUT | 3:                                                     // endpoint 3# 中断端点下传
 					if (U_TOG_OK) {                                                         // 不同步的数据包将丢弃
 						len = USB_RX_LEN;
-                        if (Ep3Buffer[0] == 0x55 && len - 1 == sizeof(HIDInput) && !HIDIN) {
-                            memset(HIDInput, 0x00, sizeof(HIDInput));
-                            memcpy(HIDInput, Ep3Buffer + 1, len - 1);
-                            HIDIN = 1;
-                        }
+						if (Ep3Buffer[0] == 0x55 && (len - 1) <= sizeof(HIDInput) && !HIDIN) {
+							memset(HIDInput, 0x00, sizeof(HIDInput));
+							memcpy(HIDInput, Ep3Buffer + 1, len - 1);
+							HIDIN = 1;
+						}
 					}
 					break;
 				case UIS_TOKEN_IN | 3:                                                      //endpoint 3# 中断端点上传
 					UEP3_T_LEN = 0;                                                         //预使用发送长度一定要清空
                     UEP3_CTRL = UEP3_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_NAK;               //默认应答NAK
 					break;
-                case UIS_TOKEN_IN | 2:                                                      //endpoint 2# 中断端点上传
-                    UEP2_T_LEN = 0;                                                         //预使用发送长度一定要清空
-                    UEP2_CTRL = UEP2_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_NAK;               //默认应答NAK
-                    break;
-                case UIS_TOKEN_IN | 1:                                                      //endpoint 1# 中断端点上传
-                    UEP1_T_LEN = 0;                                                         //预使用发送长度一定要清空
-                    UEP1_CTRL = UEP1_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_NAK;               //默认应答NAK
-                    FLAG = 1;                                                               /*传输完成标志*/
-                    break;
 				case UIS_TOKEN_SETUP | 0:                                                   // endpoint 0# SETUP
 					len = USB_RX_LEN;
 					if (len == sizeof(USB_SETUP_REQ)) {                                     // SETUP包长度
@@ -329,14 +189,6 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1) {
                                                     len = sizeof(usbCfgStrDesc);
                                                     break;
                                                 case 5:
-                                                    pDescr = (uint8_t*) (&usbKeyStrDesc[0]);
-                                                    len = sizeof(usbKeyStrDesc);
-                                                    break;
-                                                case 6:
-                                                    pDescr = (uint8_t*) (&usbMseStrDesc[0]);
-                                                    len = sizeof(usbMseStrDesc);
-                                                    break;
-                                                case 7:
                                                     pDescr = (uint8_t*) (&usbCusStrDesc[0]);
                                                     len = sizeof(usbCusStrDesc);
                                                     break;
@@ -347,16 +199,10 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1) {
 											break;
                                         case 0x22:                                          //报表描述符
                                             if (UsbSetupBuf->wIndexL == 0) {                //接口0报表描述符
-                                                pDescr = (uint8_t*) (&KeyRepDesc[0]);       //数据准备上传
-                                                len = sizeof(KeyRepDesc);
-                                            } else if (UsbSetupBuf->wIndexL == 1) {         //接口1报表描述符
-                                                pDescr = (uint8_t*) (&MouseRepDesc[0]);     //数据准备上传
-                                                len = sizeof(MouseRepDesc);
-                                            } else if (UsbSetupBuf->wIndexL == 2) {         //接口2报表描述符
                                                 pDescr = (uint8_t*) (&CustomRepDesc[0]);    //数据准备上传
                                                 len = sizeof(CustomRepDesc);
                                             } else {
-                                                len = 0xff;                                 //本程序只有3个接口，这句话正常不可能执行
+                                                len = 0xff;                                 //本程序只有1个接口，这句话正常不可能执行
                                             }
                                             break;
 										default:
@@ -382,12 +228,6 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1) {
 								case USB_CLEAR_FEATURE:
 									if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_ENDP) {  // 端点
 										switch (UsbSetupBuf->wIndexL) {
-											case 0x81:
-												UEP1_CTRL = UEP1_CTRL & ~ ( bUEP_T_TOG | MASK_UEP_T_RES ) | UEP_T_RES_NAK;
-												break;
-											case 0x82:
-												UEP2_CTRL = UEP2_CTRL & ~ ( bUEP_T_TOG | MASK_UEP_T_RES ) | UEP_T_RES_NAK;
-												break;
 											case 0x83:
 												UEP3_CTRL = UEP3_CTRL & ~ ( bUEP_T_TOG | MASK_UEP_T_RES ) | UEP_T_RES_NAK;
 												break;
@@ -419,12 +259,6 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1) {
                                     } else if ((UsbSetupBuf->bRequestType & 0x1F) == 0x02) {                        /* 设置端点 */
                                         if ((((uint16_t) UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL ) == 0x00) {
                                             switch (((uint16_t) UsbSetupBuf->wIndexH << 8 ) | UsbSetupBuf->wIndexL) {
-                                            case 0x81:
-                                                UEP1_CTRL = UEP1_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL;            /* 设置端点1 IN STALL */
-                                                break;
-                                            case 0x82:
-                                                UEP2_CTRL = UEP2_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL;            /* 设置端点2 IN STALL */
-                                                break;
                                             case 0x83:
 												UEP3_CTRL = UEP3_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL;            /* 设置端点3 IN STALL */
 												break;
@@ -492,18 +326,7 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1) {
 					}
 					break;
 				case UIS_TOKEN_OUT | 0:                                                                             // endpoint 0# OUT
-					switch (SetupReqCode) {
-                        case 0x09:
-                            if (Ep0Buffer[0])  {
-                                //printf("Light on Num Lock LED!\n");
-                            } else if (Ep0Buffer[0] == 0) {
-                                //printf("Light off Num Lock LED!\n");
-                            }
-                            break;
-						default:
-							UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;                                              // 准备下一控制传输
-							break;
-					}
+					UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;                                              		// 准备下一控制传输
                     UEP0_CTRL ^= bUEP_R_TOG;                                                                        //同步标志位翻转
 					break;
 				default:
@@ -512,8 +335,6 @@ void __usbDeviceInterrupt() __interrupt (INT_NO_USB) __using (1) {
 		UIF_TRANSFER = 0;                                                                                           // 清中断标志
 	} else if (UIF_BUS_RST) {                                                                                       // USB总线复位
 		UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-		UEP1_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK;
-		UEP2_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK;
         UEP3_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK | UEP_T_RES_NAK;
 		USB_DEV_AD = 0x00;
 		UIF_SUSPEND = 0;
@@ -548,12 +369,6 @@ void usbDevInit() {
     UEP0_DMA = (uint16_t) (&Ep0Buffer[0]);                                      //端点0数据传输地址
     UEP4_1_MOD &= ~(bUEP4_RX_EN | bUEP4_TX_EN);                                 //端点0单64字节收发缓冲区
     UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;                                  //OUT事务返回ACK，IN事务返回NAK
-    UEP1_DMA = (uint16_t) (&Ep1Buffer[0]);                                      //端点1数据传输地址
-    UEP4_1_MOD = UEP4_1_MOD & ~bUEP1_BUF_MOD | bUEP1_TX_EN;                     //端点1发送使能 64字节缓冲区
-    UEP1_CTRL = bUEP_AUTO_TOG | UEP_T_RES_NAK;                                  //端点1自动翻转同步标志位，IN事务返回NAK
-    UEP2_DMA = (uint16_t) (&Ep2Buffer[0]);                                      //端点2数据传输地址
-    UEP2_3_MOD = UEP2_3_MOD & ~bUEP2_BUF_MOD | bUEP2_TX_EN;                     //端点2发送使能 64字节缓冲区
-    UEP2_CTRL = bUEP_AUTO_TOG | UEP_T_RES_NAK;                                  //端点2自动翻转同步标志位，IN事务返回NAK
     UEP3_DMA = (uint16_t) (&Ep3Buffer[0]);                                      //端点3数据传输地址s
     UEP2_3_MOD = UEP2_3_MOD & ~bUEP3_BUF_MOD | bUEP3_RX_EN | bUEP3_TX_EN;       //端点3收发使能 128字节缓冲区
     UEP3_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK | UEP_T_RES_NAK;                  //OUT事务返回ACK，IN事务返回NAK
@@ -565,25 +380,10 @@ void usbDevInit() {
 	USB_INT_FG = 0xFF;                                                          // 清中断标志
 	USB_INT_EN = bUIE_SUSPEND | bUIE_TRANSFER | bUIE_BUS_RST;
 	IE_USB = 1;
-    IP_EX |= bIP_USB;
 
-    UEP1_T_LEN = 0;
-    UEP2_T_LEN = 0;
     UEP3_T_LEN = 0;
 
     FLAG = 1;
-}
-
-void Enp1IntIn() {
-    memcpy(Ep1Buffer, HIDKey, sizeof(HIDKey));                                  //加载上传数据
-    UEP1_T_LEN = sizeof(HIDKey);                                                //上传数据长度
-    UEP1_CTRL = UEP1_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_ACK;                   //有数据时上传数据并应答ACK
-}
-
-void Enp2IntIn( ) {
-    memcpy(Ep2Buffer, HIDMouse, sizeof(HIDMouse));                              //加载上传数据
-    UEP2_T_LEN = sizeof(HIDMouse);                                              //上传数据长度
-    UEP2_CTRL = UEP2_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_ACK;                   //有数据时上传数据并应答ACK
 }
 
 void Enp3IntIn( ) {
@@ -591,32 +391,6 @@ void Enp3IntIn( ) {
     memcpy(Ep3Buffer + MAX_PACKET_SIZE + 1, HIDOutput, sizeof(HIDOutput));      //加载上传数据
     UEP3_T_LEN = sizeof(HIDOutput) + 1;                                         //上传数据长度
     UEP3_CTRL = UEP3_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_ACK;                   //有数据时上传数据并应答ACK
-}
-
-void usbSetKeycode(uint8_t i, uint8_t key) {
-    uint8_t len = sizeof(HIDKey);
-    i = i % len;
-    HIDKey[i] = key;
-}
-
-void usbReleaseAll() {
-    uint8_t len = sizeof(HIDKey);
-    for (uint8_t i = 0; i < len; i++)
-        HIDKey[i] = 0x00;
-}
-
-void usbPushKeydata() {
-    while (FLAG == 0);
-    
-    uint8_t len = 0;
-    uint8_t type = HIDKey[0];
-    if (type == 0x01) len = sizeof(HIDKey);
-    else if (type == 0x02) len = 3;
-    if (type > 0) {
-        memcpy(Ep1Buffer, HIDKey, len);
-        UEP1_T_LEN = len;
-        UEP1_CTRL = UEP1_CTRL & ~ MASK_UEP_T_RES | UEP_T_RES_ACK;
-    }
 }
 
 uint8_t getHIDData(uint8_t index) {
@@ -641,4 +415,10 @@ void pushHIDData() {
 
 uint8_t* fetchHIDData() {
     return HIDInput;
+}
+
+void hidPrint(const char* str) {
+	memset(HIDOutput, 0x00, sizeof(HIDOutput));
+	strcpy(HIDOutput, str);
+	Enp3IntIn();
 }

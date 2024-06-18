@@ -3,11 +3,9 @@
 
 #include <stdint.h>
 
-void usbDevInit();
+#define HID_BUF_SIZE 42
 
-void usbSetKeycode(uint8_t i, uint8_t key);
-void usbReleaseAll();
-void usbPushKeydata();
+void usbDevInit();
 
 uint8_t getHIDData(uint8_t index);
 void setHIDData(uint8_t index, uint8_t data);
@@ -16,5 +14,6 @@ void requestHIDData();
 void pushHIDData();
 uint8_t* fetchHIDData();
 
+void hidPrint(const char* str);
 
 #endif

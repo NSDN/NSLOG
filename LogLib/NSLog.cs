@@ -9,7 +9,6 @@ namespace LogLib
     public class NSLog
     {
         Hid hid;
-        IntPtr ptr;
 
         public bool Connected
         {
@@ -28,28 +27,28 @@ namespace LogLib
             }
         }
 
-        string[] strBuf; int cur;
+        string strBuf;
 
-        public NSLog()
+        public NSLog(bool is64bit = true)
         {
-            hid = new Hid();
+            hid = new Hid(is64bit);
             hid.DataReceived += Hid_DataReceived;
             hid.DeviceRemoved += Hid_DeviceRemoved;
 
-            ptr = new IntPtr(-1);
             recBuf = new List<byte>();
-            strBuf = new string[] { "", "" };
-            cur = 0;
+            strBuf = "";
         }
 
         public void Connect()
         {
-            ushort vid = 0x3232; byte mid = 0x02;
+            ushort vid = 0x3232; byte mid = 0x00;
             ushort pid = 46;
             if (!Connected)
             {
-                ptr = hid.OpenDevice(vid, pid, mid);
-                if ((int)ptr != -1)
+                int cnt = 0;
+                hid.ListHidDevice(ref cnt);
+                var ret = hid.OpenDevice(vid, pid, mid);
+                if (ret == Hid.HID_RETURN.SUCCESS || ret == Hid.HID_RETURN.DEVICE_OPENED)
                 {
                     Connected = true;
                 }
@@ -78,25 +77,8 @@ namespace LogLib
                 string[] lines = str.Split('\n');
                 for (int i = 0; i < lines.Length; i++)
                 {
-                    if (cur < 2)
-                    {
-                        strBuf[cur] = lines[i];
-                        cur += 1;
-                    }
-                    else
-                    {
-                        strBuf[0] = strBuf[1];
-                        strBuf[1] = lines[i];
-                    }
+                    Print(0, i % 4, lines[i]);
                 }
-                List<byte> buf = new List<byte>();
-                buf.Add(0x01);
-                buf.AddRange(str2bytes(strBuf[0], 16));
-                buf.AddRange(str2bytes(strBuf[1], 16));
-                byte[] bytes = buf.ToArray();
-                Report report = new Report(0x55, bytes);
-                hid.Write(report);
-                Thread.Sleep(100);
             }
         }
 
@@ -104,20 +86,19 @@ namespace LogLib
         {
             if (Connected)
             {
-                str = str.Split('\n')[0];
-                strBuf[y % 2] = "";
+                if (str.Contains("\n"))
+                    str = str.Split('\n')[0];
+                strBuf = "";
                 for (int i = 0; i < x; i++)
-                    strBuf[y % 2] += " ";
-                strBuf[y % 2] += str;
+                    strBuf += " ";
+                strBuf += str;
                 List<byte> buf = new List<byte>();
-                buf.Add(0x01);
-                buf.AddRange(str2bytes(strBuf[0], 16));
-                buf.AddRange(str2bytes(strBuf[1], 16));
+                buf.Add((byte)((y % 4) + 1));
+                buf.AddRange(str2bytes(strBuf, 20));
                 byte[] bytes = buf.ToArray();
                 Report report = new Report(0x55, bytes);
                 hid.Write(report);
-                cur = 0;
-                Thread.Sleep(100);
+                Thread.Sleep(200);
             }
         }
 
@@ -126,14 +107,14 @@ namespace LogLib
             if (Connected)
             {
                 List<byte> buf = new List<byte>();
-                byte offset = (byte)((y * 16 + x) & 0x1F);
-                buf.Add((byte)(0x20 | offset));
+                buf.Add(0xFF);
+                buf.Add((byte)(x & 0xFF));
+                buf.Add((byte)(y & 0xFF));
                 buf.Add((byte)c);
                 byte[] bytes = buf.ToArray();
                 Report report = new Report(0x55, bytes);
                 hid.Write(report);
-                cur = 0;
-                Thread.Sleep(10);
+                Thread.Sleep(20);
             }
         }
 
@@ -142,12 +123,11 @@ namespace LogLib
             if (Connected)
             {
                 List<byte> buf = new List<byte>();
-                buf.Add(0x00);
+                buf.Add(0xFE);
                 byte[] bytes = buf.ToArray();
                 Report report = new Report(0x55, bytes);
                 hid.Write(report);
-                cur = 0;
-                Thread.Sleep(50);
+                Thread.Sleep(100);
             }
         }
 
